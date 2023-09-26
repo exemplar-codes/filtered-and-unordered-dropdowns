@@ -10,7 +10,7 @@ export default function Feat() {
 
   return (
     <div>
-      Feat
+      FeatReal
       <p>
         <span>Country&nbsp;</span>
         <Dropdown setValues={setForm} values={form} name="country" />
