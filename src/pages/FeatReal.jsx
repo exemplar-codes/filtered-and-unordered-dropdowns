@@ -97,12 +97,6 @@ export default function FeatReal() {
 
   return (
     <div>
-      <a href="https://github.com/exemplar-codes/filtered-and-unordered-dropdowns/blob/main/src/pages/FeatReal.jsx">
-        <pre>FeatReal.jsx</pre>
-      </a>
-      <p>
-        <em>{data ? "Got data ✅ " : "Data absent ❌"}</em>
-      </p>
       <p className="row">
         <span>Country&nbsp;</span>
         <FilterDropdown
@@ -130,6 +124,28 @@ export default function FeatReal() {
           optionsObject={relevantValues}
         />
       </p>
+      <hr />
+      <a href="https://github.com/exemplar-codes/filtered-and-unordered-dropdowns/blob/main/src/pages/FeatReal.jsx">
+        <pre>FeatReal.jsx</pre>
+      </a>
+      <p>
+        <em>{data ? "Got data ✅ " : "Data absent ❌"}</em>
+      </p>
+      <details>
+        <summary>how and what</summary>
+        <ul style={{ textAlign: "left" }}>
+          <li>
+            Initial generation time O(n<sup>d</sup>)
+          </li>
+          <li>
+            onSelect time O(n<sup>d-1</sup>)
+          </li>
+          <li>
+            Memory: O(n<sup>d</sup>)
+          </li>
+          <li>DX: addition/removal of fields will require code changes</li>
+        </ul>
+      </details>
     </div>
   );
 }
