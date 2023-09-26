@@ -10,6 +10,9 @@ function App() {
     <div>
       {/* <Feat /> */}
       <FeatReal />
+      <a href="https://github.com/exemplar-codes/filtered-but-independent-dropdowns">
+        Source code
+      </a>
     </div>
   );
 }
