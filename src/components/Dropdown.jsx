@@ -1,7 +1,7 @@
 export default function Dropdown({
-  value = "bob",
+  values = "bob",
   name = "Hello",
-  setValue = () => {},
+  setValues = () => {},
   options = [
     { label: "Alice", value: "alice" },
     { label: "Bob", value: "bob" },
@@ -11,11 +11,11 @@ export default function Dropdown({
     const key = name;
     const value = event.target.value;
 
-    setValue((prev) => ({ ...prev, [key]: value }));
+    setValues((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
-    <select value={value} onChange={onChangeHandler}>
+    <select value={values[name]} onChange={onChangeHandler}>
       {options.map((item) => (
         <option key={item.value} value={item.value}>
           {item.label}

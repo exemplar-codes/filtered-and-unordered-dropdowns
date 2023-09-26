@@ -12,15 +12,15 @@ export default function Feat() {
     <div>
       <p>
         <span>Country&nbsp;</span>
-        <Dropdown setValue={setForm} values={form} name="country" />
+        <Dropdown setValues={setForm} values={form} name="country" />
       </p>
       <p>
         <span>Method&nbsp;</span>
-        <Dropdown setValue={setForm} values={form} name="method" />
+        <Dropdown setValues={setForm} values={form} name="method" />
       </p>
       <p>
         <span>Currency&nbsp;</span>
-        <Dropdown setValue={setForm} values={form} name="currency" />
+        <Dropdown setValues={setForm} values={form} name="currency" />
       </p>
     </div>
   );
