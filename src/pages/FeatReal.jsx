@@ -97,7 +97,9 @@ export default function FeatReal() {
 
   return (
     <div>
-      FeatReal
+      <a href="https://github.com/exemplar-codes/filtered-and-unordered-dropdowns/blob/main/src/pages/FeatReal.jsx">
+        <pre>FeatReal.jsx</pre>
+      </a>
       <p>
         <em>{data ? "Got data ✅ " : "Data absent ❌"}</em>
       </p>

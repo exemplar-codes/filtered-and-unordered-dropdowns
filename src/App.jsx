@@ -9,8 +9,8 @@ function App() {
   return (
     <div>
       {/* <Feat /> */}
+      <h2>Filtered and unordered dropdowns</h2>
       <FeatReal />
-      <h1>Filtered but independent dropdowns</h1>
       <a
         href="https://github.com/exemplar-codes/filtered-and-unordered-dropdowns"
         target="_blank"
