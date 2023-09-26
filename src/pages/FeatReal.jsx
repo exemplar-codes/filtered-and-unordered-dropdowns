@@ -1,7 +1,7 @@
 import { useState } from "react";
 import MOCK_DATA from "../data.json";
 
-import Dropdown from "../components/Dropdown";
+import FilterDropdown from "../components/FilterDropdown";
 import { useEffect } from "react";
 import { useMemo } from "react";
 
@@ -49,24 +49,80 @@ export default function Feat() {
     return innerData_;
   }, [MOCK_DATA]);
 
-  console.log({ internalData: internalData.length });
+  const relevantValues = useMemo(() => {
+    // internalData.filter by filled values
+    // return {name1: [''], name2: [''], name3: ['']}
+
+    const fields = Object.entries(form);
+
+    // relevantValues_
+    return fields.reduce((accum, [formField, formFieldFilledValue]) => {
+      // example: key=country, value='SG'
+
+      // Find relevant nodes from alll possible list
+      let relevantNodesForField = null; // internalData filtered according to currently filled values
+      relevantNodesForField = internalData.filter((node) => {
+        const nodeEntries = Object.entries(node);
+        return nodeEntries.every(([nodeField, nodeValue]) => {
+          // nodeField === formField
+          if (nodeField !== formField) {
+            const filledValue = form[nodeField];
+            if (!filledValue) return true; // unfilled. doesn't take part in filtering
+            return filledValue === nodeValue; // filled, should match (since we have internalData all possibilities)
+          } else {
+            // self field, can't filter
+            return true;
+          }
+        });
+      });
+
+      // Combine all relevant nodes' field values, remove duplicates
+      const relevantValuesForField = new Set(
+        relevantNodesForField.map((item) => item[formField])
+      );
+
+      // 3. finally, return the relevant values (strings) as array
+      accum[formField] = [...relevantValuesForField];
+
+      return accum;
+    }, {});
+  }, [form]);
+
+  console.log({ internalData: internalData.length, internalData });
+  console.log({ relevantValues });
+
   return (
     <div>
       FeatReal
       <p>
         <em>{data ? "Got data ✅ " : "Data absent ❌"}</em>
       </p>
-      <p>
+      <p className="row">
         <span>Country&nbsp;</span>
-        <Dropdown setValues={setForm} values={form} name="country" />
+        <FilterDropdown
+          setValues={setForm}
+          values={form}
+          name="country"
+          optionsObject={relevantValues}
+        />
       </p>
-      <p>
+      <p className="row">
         <span>Method&nbsp;</span>
-        <Dropdown setValues={setForm} values={form} name="method" />
+        <FilterDropdown
+          setValues={setForm}
+          values={form}
+          name="method"
+          optionsObject={relevantValues}
+        />
       </p>
-      <p>
+      <p className="row">
         <span>Currency&nbsp;</span>
-        <Dropdown setValues={setForm} values={form} name="currency" />
+        <FilterDropdown
+          setValues={setForm}
+          values={form}
+          name="currency"
+          optionsObject={relevantValues}
+        />
       </p>
     </div>
   );
