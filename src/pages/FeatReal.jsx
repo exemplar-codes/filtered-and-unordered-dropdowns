@@ -5,7 +5,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import { useEffect } from "react";
 import { useMemo } from "react";
 
-export default function Feat() {
+export default function FeatReal() {
   const [form, setForm] = useState({
     country: null,
     method: null,
