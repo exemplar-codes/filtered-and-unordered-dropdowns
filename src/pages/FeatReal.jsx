@@ -17,7 +17,7 @@ export default function Feat() {
     setData(MOCK_DATA);
   }, []);
 
-  const internalData = useMemo(() => {
+  const allPossibleNodes = useMemo(() => {
     // [{name1, name2, name3}]
 
     const countriesWithExtraData = Object.entries(MOCK_DATA);
@@ -61,7 +61,7 @@ export default function Feat() {
 
       // Find relevant nodes from alll possible list
       let relevantNodesForField = null; // internalData filtered according to currently filled values
-      relevantNodesForField = internalData.filter((node) => {
+      relevantNodesForField = allPossibleNodes.filter((node) => {
         const nodeEntries = Object.entries(node);
         return nodeEntries.every(([nodeField, nodeValue]) => {
           // nodeField === formField
@@ -88,7 +88,11 @@ export default function Feat() {
     }, {});
   }, [form]);
 
-  console.log({ internalData: internalData.length, internalData });
+  console.log({
+    allPossibleNodes_length: allPossibleNodes.length,
+    allPossibleNodes: allPossibleNodes,
+  });
+
   console.log({ relevantValues });
 
   return (
