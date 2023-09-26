@@ -132,7 +132,7 @@ export default function FeatReal() {
         <em>{data ? "Got data ✅ " : "Data absent ❌"}</em>
       </p>
       <details>
-        <summary>how and what</summary>
+        <summary>Time, space, DX</summary>
         <ul style={{ textAlign: "left" }}>
           <li>
             Initial generation time O(n<sup>d</sup>)
