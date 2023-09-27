@@ -32,9 +32,12 @@ export default function FilterDropdown({
     if (propOptions.length === 1) {
       const item = propOptions[0];
       const value = item[valueKey] ?? item;
+      console.log("Single auto select", value, propOptions);
       onChangeHandler({ target: { value: value } });
     }
-  }, [propOptions.length]);
+  }, [propOptions.length, JSON.stringify(propOptions[0])]);
+  // dep1 - single value detect, update
+  // dep2 - handle case where no value exists but first element doesn't change, should update.
 
   return (
     <div className="row">
