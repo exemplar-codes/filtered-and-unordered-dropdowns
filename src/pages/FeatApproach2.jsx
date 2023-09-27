@@ -5,6 +5,8 @@ import FilterDropdown from "../components/FilterDropdown";
 
 /**
  * Goal: Generate all possibilities given a nested object.
+ * Generally used with `getRelevantValuesFromAllPossibleNodes`.
+ * Tip: this is an expensive function. cache it (useMemo for example).
  *
  * @param {Object | Array } nestedObject Object of objects with multiple keys, with leaf values being array of non objects
  *
@@ -40,8 +42,21 @@ import FilterDropdown from "../components/FilterDropdown";
  *  ```
  *
  * Metrics - Time O(n^d), Space O(n + d), Output size O(n^d) , DX: fixed lines of code to add/remove if dropdown is added/removed, since it's recursive.
+ *
+ * Example code:
+ * ```js
+ * const allPossibleValues = cache_generateAllPossibleNodesFromNestedObject(data_nested_object, fields_array)
+ * const formObject = someStateObject;
+ * const relevantValues = generateAllPossibleNodesFromNestedObject(cache_generateAllPossibleNodesFromNestedObject, formObject);
+ *
+ * <Dropdown name="field1" options={relevantValues.field1.map()} />
+ * <Dropdown name="field2" options={relevantValues.field2.map()} />
+ * ```
  */
-function generateAllPossibleNodesFromNestedObject(nestedObject, keys) {
+export const generateAllPossibleNodesFromNestedObject = (
+  nestedObject,
+  keys
+) => {
   const currentKeyName = keys[0];
   if (Array.isArray(nestedObject)) {
     // ['SGD', 'AED'], ['currency'] => [{currency: 'SGD'}, { currency: 'AED'}]
@@ -76,16 +91,25 @@ function generateAllPossibleNodesFromNestedObject(nestedObject, keys) {
   );
 
   // since all descendants (recur call is an array, and we call map on each), we get array of arrays. Example (see below)
-  // type, allNodesIncludingCurrentLevel   [[{ method: local, currency: 'SGD' }, { method: local, currency: 'AED' }], [{ method: swift, currency: 'USD' }, { method: swift, , currency: 'CAD' }]]
+  // type, allNodesIncludingCurrentLevel
+  // example
+  //  [
+  //    [{ method: local, currency: 'SGD' }, { method: local, currency: 'AED'   }],
+  //    [{ method: swift, currency: 'USD' }, { method: swift, , currency: 'CAD' }]
+  // ]
   // but since all have the same number of keys, we can combine them to form a single array.
 
   const allDescendantsAtOneLevelWithCurrentLevelAdded =
     allDescendantsWithCurrentLevelAdded.flat();
 
   return allDescendantsAtOneLevelWithCurrentLevelAdded;
-}
+};
 
 /**
+ * Get relevant values, i.e. filtered values based on filled dropdown values. From all possible values.
+ * Generally used with `generateAllPossibleNodesFromNestedObject`.
+ * Don't cache this, it should run on every dropdown change (useEffect w.r.t formObject for example).
+ *
  * @param {Array<Object>} allPossibleNodes array of simple objects (flat). Only dropdown field names should be present here.
  * example [{ country: 'SG', method: 'local', currency: 'SGD' }, { country: 'US', method: 'swift', currency: 'CAD' }]
  *
@@ -94,6 +118,18 @@ function generateAllPossibleNodesFromNestedObject(nestedObject, keys) {
  *
  * @returns {Object} keys are field names, and values are simple arrays (*values* for dropdown).
  * example: { country: ['IN', 'US', 'CA', 'AE'], method: ['local', 'swift'],  currency: ['INR', 'USD' , 'CAD', 'SGD', 'AED']}
+ *
+ * Used with `generateAllPossibleNodesFromNestedObject`
+ *
+ * Example code:
+ * ```js
+ * const allPossibleValues = cache_generateAllPossibleNodesFromNestedObject(data_nested_object, fields_array)
+ * const formObject = someStateObject;
+ * const relevantValues = generateAllPossibleNodesFromNestedObject(cache_generateAllPossibleNodesFromNestedObject, formObject);
+ *
+ * <Dropdown name="field1" options={relevantValues.field1.map()} />
+ * <Dropdown name="field2" options={relevantValues.field2.map()} />
+ * ```
  */
 function getRelevantValuesFromAllPossibleNodes(allPossibleNodes, formObject) {
   // internalData.filter by filled values
