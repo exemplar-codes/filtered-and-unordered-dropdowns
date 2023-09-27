@@ -113,8 +113,26 @@ export const generateAllPossibleNodesFromNestedObject = (
  * @param {Array<Object>} allPossibleNodes array of simple objects (flat). Only dropdown field names should be present here.
  * example [{ country: 'SG', method: 'local', currency: 'SGD' }, { country: 'US', method: 'swift', currency: 'CAD' }]
  *
- * @param {Object} formObject simple (flat object) containing field names and current values
+ * @param {Object} formObject simple (flat object) containing field names and current values(or optionally functions)
  * example: { country: 'SG', method: 'local', currency: 'SGD'}. unfilled values are OK too, { country: 'SG', method: '', currency: ''}
+ *
+ * @param {Object} formObjectCriterias
+ * `formObjectCriteria` is an optional. You can pass a "match criteria" function that determines "revevant or not",
+ *  instead of the default (exact match or unfilled)
+ *
+ *  Usage is simple, just pass key (same as formObject key) and value a function.
+ *  This will override the formObject value criteria (i.e. exact match or unfilled).
+ *
+ *  Criteria function: params 'possibleValue, currentlyFilledValue' as param and must return boolean (true means possibility is relevant).
+ *    Additionally, the defaultCriteria is passed as third criteria - in case you want to skip custom criteria
+ *
+ *  Just to be clear, the default match function (if you pass string, and don't use this variation) is exact match or unfilled value.
+ *
+ *  Example:
+ *    formObject={ country: 'SG', method: 'local', currency: 'SGD'}
+ *    formObjectCriteria={ method: (possibleValue, currentlyFilledValue, defaultCriteriaFunc=) => { return boolean } }
+ *
+ * ---
  *
  * @returns {Object} keys are field names, and values are simple arrays (*values* for dropdown).
  * example: { country: ['IN', 'US', 'CA', 'AE'], method: ['local', 'swift'],  currency: ['INR', 'USD' , 'CAD', 'SGD', 'AED']}
@@ -133,7 +151,8 @@ export const generateAllPossibleNodesFromNestedObject = (
  */
 export const getRelevantValuesFromAllPossibleNodes = (
   allPossibleNodes,
-  formObject
+  formObject,
+  formObjectCriterias = null
 ) => {
   // internalData.filter by filled values
   // return {name1: [''], name2: [''], name3: ['']}
@@ -159,7 +178,14 @@ export const getRelevantValuesFromAllPossibleNodes = (
           // try to match with filled value
           const filledValue = formObject[nodeField];
           if (!filledValue) return true; // unfilled. doesn't take part in filtering
-          return filledValue === nodeValue; // filled, should match (since we have internalData all possibilities)
+
+          const defaultCriteria = (possibilityValue, filledValue_) =>
+            possibilityValue === filledValue_; // default criteria, exact match
+
+          const criteriaFunction = formObjectCriterias?.[nodeField];
+          if (!criteriaFunction) return defaultCriteria(nodeValue, filledValue);
+
+          return criteriaFunction(nodeValue, filledValue, defaultCriteria);
         });
       });
 
