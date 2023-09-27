@@ -140,6 +140,7 @@ export const getRelevantValuesFromAllPossibleNodes = (
   const fieldsAndFilledValues = Object.entries(formObject);
 
   // relevantValues_
+  // doing `.reduce` since we need an object
   return fieldsAndFilledValues.reduce(
     (accum, [formField, formFieldFilledValue]) => {
       // example: key=country, value='SG'
@@ -147,17 +148,18 @@ export const getRelevantValuesFromAllPossibleNodes = (
       // Find relevant nodes from alll possible list
       // internalData filtered according to currently filled values
       const relevantNodesForField = allPossibleNodes.filter((node) => {
+        // since we want a list of countries (as per example) from nodes
+        // we should ignore 'country', and filter out other keys (of node) w.r.t filled values
+
         const nodeEntries = Object.entries(node);
         return nodeEntries.every(([nodeField, nodeValue]) => {
-          // nodeField === formField
-          if (nodeField !== formField) {
-            const filledValue = formObject[nodeField];
-            if (!filledValue) return true; // unfilled. doesn't take part in filtering
-            return filledValue === nodeValue; // filled, should match (since we have internalData all possibilities)
-          } else {
-            // self field, can't filter
-            return true;
-          }
+          if (nodeField === formField) return true; // self, ignore
+
+          // the field is something other than current key ('country')
+          // try to match with filled value
+          const filledValue = formObject[nodeField];
+          if (!filledValue) return true; // unfilled. doesn't take part in filtering
+          return filledValue === nodeValue; // filled, should match (since we have internalData all possibilities)
         });
       });
 
