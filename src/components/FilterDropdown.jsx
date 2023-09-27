@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 /**
  * This is one of the dropdown, in a series of dropdowns that are dependent
  */
@@ -22,7 +24,17 @@ export default function FilterDropdown({
     setValues((prev) => ({ ...prev, [key]: value }));
   };
 
-  const options_ = optionsObject[name].concat([{ label: "Select", value: "" }]);
+  // prepend 'Select' (should be first option)
+  const propOptions = optionsObject[name];
+  const options_ = [{ label: "Select", value: "" }].concat(propOptions);
+
+  useEffect(() => {
+    if (propOptions.length === 1) {
+      const item = propOptions[0];
+      const value = item[valueKey] ?? item;
+      onChangeHandler({ target: { value: value } });
+    }
+  }, [propOptions.length]);
 
   return (
     <div className="row">
