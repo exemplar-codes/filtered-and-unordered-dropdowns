@@ -87,9 +87,9 @@ function generateAllPossibleNodesFromNestedObject(nestedObject, keys) {
 
 export default function FeatApproach2() {
   const [form, setForm] = useState({
-    country: null,
-    method: null,
-    currency: null,
+    country: "",
+    method: "",
+    currency: "",
   });
 
   const [data, setData] = useState(null);

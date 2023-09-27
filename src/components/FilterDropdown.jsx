@@ -22,10 +22,12 @@ export default function FilterDropdown({
     setValues((prev) => ({ ...prev, [key]: value }));
   };
 
+  const options_ = optionsObject[name].concat([{ label: "Select", value: "" }]);
+
   return (
     <div className="row">
       <select value={values[name]} onChange={onChangeHandler}>
-        {optionsObject[name].map((item) => {
+        {options_.map((item) => {
           const value_ = item[valueKey] ?? item;
           const label_ = item[labelKey] ?? item;
           return (
