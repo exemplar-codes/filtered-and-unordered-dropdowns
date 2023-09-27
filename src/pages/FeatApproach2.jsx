@@ -131,7 +131,10 @@ export const generateAllPossibleNodesFromNestedObject = (
  * <Dropdown name="field2" options={relevantValues.field2.map()} />
  * ```
  */
-function getRelevantValuesFromAllPossibleNodes(allPossibleNodes, formObject) {
+export const getRelevantValuesFromAllPossibleNodes = (
+  allPossibleNodes,
+  formObject
+) => {
   // internalData.filter by filled values
   // return {name1: [''], name2: [''], name3: ['']}
   const fieldsAndFilledValues = Object.entries(formObject);
@@ -170,7 +173,7 @@ function getRelevantValuesFromAllPossibleNodes(allPossibleNodes, formObject) {
     },
     {}
   );
-}
+};
 
 export default function FeatApproach2() {
   const [form, setForm] = useState({
