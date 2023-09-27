@@ -56,7 +56,7 @@ function generateAllPossibleNodesFromNestedObject(nestedObject, keys) {
   //  output: [{ method: local, currency: 'SGD' }, { method: local, currency: 'AED' }, { method: swift, currency: 'USD' }, { method: swift, , currency: 'CAD' }]
 
   const currentLevelKeyValuePairs = Object.entries(nestedObject);
-  console.log({ currentLevelKeyValuePairs });
+  // console.log({ currentLevelKeyValuePairs });
 
   const allDescendantsWithCurrentLevelAdded = currentLevelKeyValuePairs.map(
     ([currentLevelKey, currentLevelDescendants]) => {
