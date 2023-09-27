@@ -32,7 +32,7 @@ export default function FilterDropdown({
     if (propOptions.length === 1) {
       const item = propOptions[0];
       const value = item[valueKey] ?? item;
-      console.log("Single auto select", value, propOptions);
+      console.log(name, "Single auto select", { value });
       onChangeHandler({ target: { value: value } });
     }
   }, [propOptions.length, JSON.stringify(propOptions[0])]);
