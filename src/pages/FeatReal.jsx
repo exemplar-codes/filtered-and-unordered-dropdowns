@@ -126,7 +126,7 @@ export default function FeatReal() {
       </p>
       <hr />
       <a href="https://github.com/exemplar-codes/filtered-and-unordered-dropdowns/blob/main/src/pages/FeatReal.jsx">
-        <pre>FeatReal.jsx</pre>
+        <pre>FeatReal.jsx (explicit nested for loops)</pre>
       </a>
       <p>
         <em>{data ? "Got data ✅ " : "Data absent ❌"}</em>

@@ -4,13 +4,14 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import FeatReal from "./pages/FeatReal";
 import Feat from "./pages/Feat";
+import FeatApproach2 from "./pages/FeatApproach2";
 
 function App() {
   return (
     <div>
       {/* <Feat /> */}
       <h2>Filtered and unordered dropdowns</h2>
-      <FeatReal />
+      <FeatApproach2 />
       <a
         href="https://github.com/exemplar-codes/filtered-and-unordered-dropdowns"
         target="_blank"
