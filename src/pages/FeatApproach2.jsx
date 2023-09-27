@@ -85,6 +85,57 @@ function generateAllPossibleNodesFromNestedObject(nestedObject, keys) {
   return allDescendantsAtOneLevelWithCurrentLevelAdded;
 }
 
+/**
+ * @param {Array<Object>} allPossibleNodes array of simple objects (flat). Only dropdown field names should be present here.
+ * example [{ country: 'SG', method: 'local', currency: 'SGD' }, { country: 'US', method: 'swift', currency: 'CAD' }]
+ *
+ * @param {Object} formObject simple (flat object) containing field names and current values
+ * example: { country: 'SG', method: 'local', currency: 'SGD'}. unfilled values are OK too, { country: 'SG', method: '', currency: ''}
+ *
+ * @returns {Object} keys are field names, and values are simple arrays (*values* for dropdown).
+ * example: { country: ['IN', 'US', 'CA', 'AE'], method: ['local', 'swift'],  currency: ['INR', 'USD' , 'CAD', 'SGD', 'AED']}
+ */
+function getRelevantValuesFromAllPossibleNodes(allPossibleNodes, formObject) {
+  // internalData.filter by filled values
+  // return {name1: [''], name2: [''], name3: ['']}
+  const fieldsAndFilledValues = Object.entries(formObject);
+
+  // relevantValues_
+  return fieldsAndFilledValues.reduce(
+    (accum, [formField, formFieldFilledValue]) => {
+      // example: key=country, value='SG'
+
+      // Find relevant nodes from alll possible list
+      let relevantNodesForField = null; // internalData filtered according to currently filled values
+      relevantNodesForField = allPossibleNodes.filter((node) => {
+        const nodeEntries = Object.entries(node);
+        return nodeEntries.every(([nodeField, nodeValue]) => {
+          // nodeField === formField
+          if (nodeField !== formField) {
+            const filledValue = formObject[nodeField];
+            if (!filledValue) return true; // unfilled. doesn't take part in filtering
+            return filledValue === nodeValue; // filled, should match (since we have internalData all possibilities)
+          } else {
+            // self field, can't filter
+            return true;
+          }
+        });
+      });
+
+      // Combine all relevant nodes' field values, remove duplicates
+      const relevantValuesForField = new Set(
+        relevantNodesForField.map((item) => item[formField])
+      );
+
+      // 3. finally, return the relevant values (strings) as array
+      accum[formField] = [...relevantValuesForField];
+
+      return accum;
+    },
+    {}
+  );
+}
+
 export default function FeatApproach2() {
   const [form, setForm] = useState({
     country: "",
@@ -129,7 +180,7 @@ export default function FeatApproach2() {
 
     // return innerData_;
 
-    // use recursion. assume structure = {AE: { local: ['x']}}, ['country', 'method', 'currency'] => '[{country: AE, method: local, currency: x}]'
+    // NEW: use recursion. assume structure = {AE: { local: ['x']}}, ['country', 'method', 'currency'] => '[{country: AE, method: local, currency: x}]'
     const data = MOCK_DATA;
     const fields = Object.keys(form);
 
@@ -137,43 +188,8 @@ export default function FeatApproach2() {
   }, [MOCK_DATA]);
 
   const relevantValues = useMemo(() => {
-    // internalData.filter by filled values
-    // return {name1: [''], name2: [''], name3: ['']}
-
-    const fields = Object.entries(form);
-
-    // relevantValues_
-    return fields.reduce((accum, [formField, formFieldFilledValue]) => {
-      // example: key=country, value='SG'
-
-      // Find relevant nodes from alll possible list
-      let relevantNodesForField = null; // internalData filtered according to currently filled values
-      relevantNodesForField = allPossibleNodes.filter((node) => {
-        const nodeEntries = Object.entries(node);
-        return nodeEntries.every(([nodeField, nodeValue]) => {
-          // nodeField === formField
-          if (nodeField !== formField) {
-            const filledValue = form[nodeField];
-            if (!filledValue) return true; // unfilled. doesn't take part in filtering
-            return filledValue === nodeValue; // filled, should match (since we have internalData all possibilities)
-          } else {
-            // self field, can't filter
-            return true;
-          }
-        });
-      });
-
-      // Combine all relevant nodes' field values, remove duplicates
-      const relevantValuesForField = new Set(
-        relevantNodesForField.map((item) => item[formField])
-      );
-
-      // 3. finally, return the relevant values (strings) as array
-      accum[formField] = [...relevantValuesForField];
-
-      return accum;
-    }, {});
-  }, [form]);
+    return getRelevantValuesFromAllPossibleNodes(allPossibleNodes, form);
+  }, [form, allPossibleNodes]);
 
   console.log({
     allPossibleNodes_length: allPossibleNodes.length,
