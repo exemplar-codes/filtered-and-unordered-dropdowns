@@ -145,8 +145,8 @@ export const getRelevantValuesFromAllPossibleNodes = (
       // example: key=country, value='SG'
 
       // Find relevant nodes from alll possible list
-      let relevantNodesForField = null; // internalData filtered according to currently filled values
-      relevantNodesForField = allPossibleNodes.filter((node) => {
+      // internalData filtered according to currently filled values
+      const relevantNodesForField = allPossibleNodes.filter((node) => {
         const nodeEntries = Object.entries(node);
         return nodeEntries.every(([nodeField, nodeValue]) => {
           // nodeField === formField
