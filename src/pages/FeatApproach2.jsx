@@ -39,7 +39,7 @@ import FilterDropdown from "../components/FilterDropdown";
  *  ]
  *  ```
  *
- * Metrics - Time O(n^d), Space O(n), Output size O(n^d) , DX: fixed lines of code to add/remove if dropdown is added/removed, since it's recursive.
+ * Metrics - Time O(n^d), Space O(n + d), Output size O(n^d) , DX: fixed lines of code to add/remove if dropdown is added/removed, since it's recursive.
  */
 function generateAllPossibleNodesFromNestedObject(nestedObject, keys) {
   const currentKeyName = keys[0];
@@ -227,10 +227,13 @@ export default function FeatApproach2() {
           <li>
             onSelect time O(n<sup>d-1</sup>)
           </li>
+          <li>Space: O(n+ d)</li>
           <li>
-            Memory: O(n<sup>d</sup>)
+            Output size: O(n<sup>d</sup>)
           </li>
-          <li>DX: addition/removal of fields will require code changes</li>
+          <li>
+            DX: addition/removal of fields requires very little frontend change
+          </li>
         </ul>
       </details>
     </div>
